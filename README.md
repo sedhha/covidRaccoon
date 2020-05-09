@@ -4,11 +4,14 @@ This repository is a submission for "Raccoons Virtual Hackathon". [Hackathon Lin
 A very simple 2D game where the character jumps and dodges the viruses, infected people and bats. Further the game ends once you reach your home. Difficulty of the game can be changed by changing the virusvelocity variable.
 
 # Covid Raccoon: Saves the Day
+
 ![](WinnerScreen.png)
+
 ## Why Video Game Track?
 
 What can Video Games do in our lives? Well, a typical answer will be **they are a source of fun and enjoyment.** Well, that's true, but a new generation of gaming isn't just hanging at the peak of pleasure or entertainment, but today they're also getting active in the field of learning.
 ![](GithubReferences/Learning.jpg)
+
 Especially with a touch of AR and VR, these games can be useful in all types of learning, whether it be to train a surgeon for medical emergencies or to visualize the [__"Elephant Toothpaste Reaction"__](https://www.youtube.com/watch?v=p5qvi20J5IM) without getting worried about spillage and equipment.
 
 
