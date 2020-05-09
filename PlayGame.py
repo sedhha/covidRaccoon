@@ -3,7 +3,8 @@ from pygame.locals import *
 from pygame.transform import rotate,scale
 from os.path import join
 from random import randint as ri
-
+import warnings
+warnings.filterwarnings("ignore")
 #Game variables
 ScreenSize=720
 ScreenWidth=480
@@ -23,7 +24,8 @@ CharacterMove=[]
 CharacterMove.append(scale(pygame.image.load("charfm1.png"),(CharacterSize,CharacterSize))) #Walke-01
 CharacterMove.append(scale(pygame.image.load("charfm2.png"),(CharacterSize,CharacterSize))) #Walk-02
 CharacterMove.append(scale(pygame.image.load("CharJump.png"),(CharacterSize,CharacterSize))) #Jump
-CharacterMove.append(scale(pygame.image.load("charfm1.png"),(int(0.565*CharacterSize),CharacterSize))) #Aspect Ratio Scaling
+
+CharacterMove.append(scale(pygame.image.load("Charduck.png"),(int((CharacterSize-20)/0.724),CharacterSize-20))) #Aspect Ratio Scaling
 
 
 #Game Environment
@@ -53,7 +55,7 @@ Roads.append([scale(pygame.image.load("cv8.png"),(virussize,virussize)),virussiz
 Roads.append([scale(pygame.image.load("cv9.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
 Roads.append([scale(pygame.image.load("cv10.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
 Roads.append([scale(pygame.image.load("cv11.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
-Roads.append([scale(pygame.image.load("cv12.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
+Roads.append([scale(pygame.image.load("cv12.png"),(virussize,virussize)),virussize,virussize,virusTYPE]) #upto index=11
 
 SanetizerBottleSize=60
 SanetizerProt=[scale(pygame.image.load("sanetizer.png"),(SanetizerBottleSize,int(5*SanetizerBottleSize/3))),int(5*SanetizerBottleSize/3)]
@@ -70,6 +72,8 @@ def reinitialize():
 IsSkyClear=True
 IsRoadClear=True
 IsSanetizerOn=False
+Crouch=False
+Jump=False
 SkyEntityVelocity=45
 RoadEntityVelocity=30
 SkyX=reinitialize()
@@ -77,6 +81,8 @@ SkyHeightY=100
 GameSpeed=100
 FlyingVT=20
 xInit=50 #Character X position
+jumpLim=jumpMag=7 #Jumping intensity
+jumpGrowth=0.5
 #Dynamics Functions
 def Movement(xn,IsScreenClear,Type):
     IsScreenClear=False
@@ -102,15 +108,29 @@ def getRoadEntity():
         EntitySky,_,y,Type=Roads[RoadIndex]
         tmp=y
         if Type:
-            print("This comes true")
+            #print("This comes true")
             tmp=y
-            y=y+30
+            y=y+35
         return(EntitySky,reinitialize(),yInit+CharacterSize-y,tmp,1)
-    
+def crouch():
+    pass
+def jump(y,jumpLim,flag):
+    if jumpLim==-jumpMag:
+        jumpLim=jumpMag
+        y=yInit
+        flag=0
+    else:
+        y-=jumpLim*abs(jumpLim)*jumpGrowth
+        jumpLim-=1
+    #print(f"Jump values:{jumpLim}")
+    return(y,jumpLim,flag)
+def DrawFunction(screen,xC,yC,x1,y1,color=[255,0,0]): #This helped me a lot in debugging and building logic :-P
+    pygame.draw.rect(screen, color, [xC, yC, x1, y1], 1)
 #Game-Play
 alter=1
 run=1
 Danger=1
+yTop=yInit
 while run:
     screen.blit(Environment,(0,0)) #Creating Environment
     if IsSkyClear:
@@ -127,24 +147,38 @@ while run:
     else:
         RoadX,IsRoadClear=Movement(RoadX,IsRoadClear,0)
         screen.blit(EntityRoad,(RoadX,RoadY))
+        #DrawFunction(screen,RoadX,RoadY,HeightVirus,HeightVirus)
     keys = pygame.key.get_pressed()  
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
     if keys[pygame.K_SPACE]:
-        flagJ=1
-        jumpS=0
+        Jump=1
     elif keys[pygame.K_UP]:
-        flagJ=0
-        flagC=1
+        Jump=0
+        jumpLim=jumpMag
+        yInit=300
+        Crouch=1
+        #crouch()
     if RoadX>=xInit and RoadX<=xInit+CharacterSize:
-        if RoadY+HeightVirus>=yInit and RoadY+HeightVirus<=yInit+CharacterSize:
+        if (yTop<=RoadY+HeightVirus and yTop>=RoadY) or (yTop+CharacterSize<=RoadY+HeightVirus and yTop+CharacterSize>=RoadY):
             if Danger:print("Collision")
             else:print("Sanetization")
-    if alter==1:
-        screen.blit(CharacterMove[0],(xInit,yInit))
+    if alter==1 and not(Crouch) and not(Jump):
+        yTop=yInit
+        screen.blit(CharacterMove[0],(xInit,yTop))
+    elif alter==-1 and not(Crouch) and not(Jump):
+        yTop=yInit
+        screen.blit(CharacterMove[1],(xInit,yTop))
+    elif Jump and not(Crouch):
+        #print(f"{RoadY+HeightVirus}>={yTop} and {RoadY+HeightVirus}<={yTop+CharacterSize}")
+        #DrawFunction(screen,xInit,yTop,CharacterSize,CharacterSize,[0,0,255])
+        yTop,jumpLim,Jump=jump(yTop,jumpLim,Jump)
+        screen.blit(CharacterMove[2],(xInit,yTop))
     else:
-        screen.blit(CharacterMove[1],(xInit,yInit))
+        yTop=yInit+20
+        screen.blit(CharacterMove[3],(xInit,yTop))
+        Crouch=0
     alter*=-1
     pygame.display.update()
     pygame.time.delay(GameSpeed)
