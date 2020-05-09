@@ -4,11 +4,11 @@ This repository is a submission for "Raccoons Virtual Hackathon". [Hackathon Lin
 A very simple 2D game where the character jumps and dodges the viruses, infected people and bats. Further the game ends once you reach your home. Difficulty of the game can be changed by changing the virusvelocity variable.
 
 # Covid Raccoon: Saves the Day
-
+![](WinnerScreen.png)
 ## Why Video Game Track?
 
 What can Video Games do in our lives? Well, a typical answer will be **they are a source of fun and enjoyment.** Well, that's true, but a new generation of gaming isn't just hanging at the peak of pleasure or entertainment, but today they're also getting active in the field of learning.
-
+![](GithubReferences/Learning.jpg)
 Especially with a touch of AR and VR, these games can be useful in all types of learning, whether it be to train a surgeon for medical emergencies or to visualize the [__"Elephant Toothpaste Reaction"__](https://www.youtube.com/watch?v=p5qvi20J5IM) without getting worried about spillage and equipment.
 
 
@@ -19,6 +19,7 @@ I have always been curious about learning new things, whether it be related to s
 Though I am well versed with other Development (App-Dev/ Web-Dev/ Designing) and Instrumentation Tech (IoT/ Robotics etc.) but Game-Dev was always something which I wanted to learn, and that's what turned me to try it here for the first time!
 
 ## What it does ?
+![](GithubReferences/Game.gif)
 
 - It allows you to Roam around the city, which is apparently static (unless you add your custom background :-P) and look for the virus-infected people or viruses escape them till you reach your home, which is at the end of your city.
 - In this adventure, you will see different types of viruses that will try to infect you! You're a raccoon, and you're on a mission to sanitize the city without getting infected. 
@@ -41,13 +42,15 @@ All the Commits along with the messages linked to their respective changes have 
 - Added Walking Functionality
 - Added Viruses and other graphical interfaces and also added collision Detection
 - Final Modifications
-
+![](GithubReferences/commits.jpg)
 ## Challenges I Ran Into
 
 If I look back, there were lots of things I struggled with such as:
 - Getting Started with Pygame
 - Differentiating Between **Surfaces** and **Geometries** (Rectangle:- Trust me, my first raccoon was just a box 😛)
 - **Collision Detection Algorithm**: (All Credit Goes to DrawFunction in my Script, which helped me visualize the errors I was making and modify it to the best kind of collision detection)
+![](GithubReferences/CollisionDetection1.jpg)
+![](GithubReferences/CollisionDetection2.jpg)
 > if RoadX>=xInit and RoadX<=xInit+CharacterSize:
         if (yTop<=RoadY+HeightVirus and yTop>=RoadY) or (yTop+CharacterSize<=RoadY+HeightVirus and yTop+CharacterSize>=RoadY):
 - **Jumping Algorithm**: This one was the trickiest of all. Since it follows a parabolic trajectory, I struggled to create that realistic jump effect. And aborting the jump if I want to crouch.
@@ -61,6 +64,8 @@ If I look back, there were lots of things I struggled with such as:
         jumpLim-=1
     #print(f"Jump values:{jumpLim}")
     return(y,jumpLim,flag)
+
+![](GithubReferences/CollisionDetection3.jpg)
 - Identifying the right Entity and it's effect.
 - Resetting all effects time to time.
 ## What I Learned ?
