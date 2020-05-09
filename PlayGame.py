@@ -5,6 +5,8 @@ from os.path import join
 from random import randint as ri
 import warnings
 warnings.filterwarnings("ignore")
+from time import sleep
+import cv2 #For waitkeys
 #Game variables
 ScreenSize=720
 ScreenWidth=480
@@ -29,7 +31,11 @@ CharacterMove.append(scale(pygame.image.load("Charduck.png"),(int((CharacterSize
 
 
 #Game Environment
-Environment=scale(pygame.image.load("cityBg.png"),(ScreenSize,ScreenWidth))
+Environment=[]
+Environment.append(scale(pygame.image.load("cityBg0.png"),(ScreenSize,ScreenWidth)))
+Environment.append(scale(pygame.image.load("cityBg1.png"),(ScreenSize,ScreenWidth)))
+Environment.append(scale(pygame.image.load("cityBg2.png"),(ScreenSize,ScreenWidth)))
+Environment.append(scale(pygame.image.load("cityBg3.png"),(ScreenSize,ScreenWidth)))
 #Sky Variables
 
 Skies=[]
@@ -57,6 +63,8 @@ Roads.append([scale(pygame.image.load("cv10.png"),(virussize,virussize)),virussi
 Roads.append([scale(pygame.image.load("cv11.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
 Roads.append([scale(pygame.image.load("cv12.png"),(virussize,virussize)),virussize,virussize,virusTYPE]) #upto index=11
 
+#Protection Variables
+
 SanetizerBottleSize=60
 SanetizerProt=[scale(pygame.image.load("sanetizer.png"),(SanetizerBottleSize,int(5*SanetizerBottleSize/3))),int(5*SanetizerBottleSize/3)]
 flyvirussize=80 #Aspect ratio is 2:1
@@ -64,6 +72,19 @@ virusTYPe=1
 Roads.append([scale(pygame.image.load("fly1.png"),(flyvirussize,int(flyvirussize/2))),flyvirussize,int(flyvirussize/2),virusTYPe])
 Roads.append([scale(pygame.image.load("fly2.png"),(flyvirussize,int(flyvirussize/2))),flyvirussize,int(flyvirussize/2),virusTYPe])
 
+#Game Screens
+
+ExitScreen=scale(pygame.image.load("FinalScreen.png"),(ScreenSize,ScreenWidth))
+HomeSize=80
+HomeSS=scale(pygame.image.load("home.png"),(HomeSize,HomeSize))
+WinnerScreen=scale(pygame.image.load("WinnerScreen.png"),(ScreenSize,ScreenWidth))
+
+#Explosions
+
+Booom=[]
+ExplosionSize=50
+Booom.append(scale(pygame.image.load("explosion.png"),(ExplosionSize,ExplosionSize)))
+Booom.append(scale(pygame.image.load("whiteSmoke.png"),(ExplosionSize,ExplosionSize)))
 #Game Dynamics
 #Static Functions
 def reinitialize():
@@ -75,7 +96,7 @@ IsSanetizerOn=False
 Crouch=False
 Jump=False
 SkyEntityVelocity=45
-RoadEntityVelocity=30
+RoadEntityVelocity=55
 SkyX=reinitialize()
 SkyHeightY=100
 GameSpeed=100
@@ -83,6 +104,7 @@ FlyingVT=20
 xInit=50 #Character X position
 jumpLim=jumpMag=7 #Jumping intensity
 jumpGrowth=0.5
+GameLives=3
 #Dynamics Functions
 def Movement(xn,IsScreenClear,Type):
     IsScreenClear=False
@@ -112,8 +134,6 @@ def getRoadEntity():
             tmp=y
             y=y+35
         return(EntitySky,reinitialize(),yInit+CharacterSize-y,tmp,1)
-def crouch():
-    pass
 def jump(y,jumpLim,flag):
     if jumpLim==-jumpMag:
         jumpLim=jumpMag
@@ -126,13 +146,30 @@ def jump(y,jumpLim,flag):
     return(y,jumpLim,flag)
 def DrawFunction(screen,xC,yC,x1,y1,color=[255,0,0]): #This helped me a lot in debugging and building logic :-P
     pygame.draw.rect(screen, color, [xC, yC, x1, y1], 1)
+def BoomEffect(screen,ind,Sanet,x,y):
+    screen.blit(Environment[Sanet],(0,0))
+    if ind:
+        screen.blit(Booom[0],(x,y))
+    else:
+        print("S Kills")
+        print(x,y)
+        screen.blit(Booom[1],(x,y))
+        screen.blit(CharacterMove[1],(xInit,yInit))
+    pygame.display.update()
+    pygame.time.delay(4000)
+
+        
 #Game-Play
 alter=1
 run=1
 Danger=1
 yTop=yInit
+Sanet=0
+
 while run:
-    screen.blit(Environment,(0,0)) #Creating Environment
+    if Sanet<0:
+        Sanet=0
+    screen.blit(Environment[Sanet],(0,0)) #Creating Environment
     if IsSkyClear:
         #Get the Sky Entity EntitySky,SkyX,SkyY=getSkyEntity()
         EntitySky,SkyX,SkyY=getSkyEntity()
@@ -162,27 +199,74 @@ while run:
         #crouch()
     if RoadX>=xInit and RoadX<=xInit+CharacterSize:
         if (yTop<=RoadY+HeightVirus and yTop>=RoadY) or (yTop+CharacterSize<=RoadY+HeightVirus and yTop+CharacterSize>=RoadY):
-            if Danger:print("Collision")
-            else:print("Sanetization")
-    if alter==1 and not(Crouch) and not(Jump):
+            if Danger:
+                if GameLives<=0:
+                    print("Game Over!")
+                    screen.blit(ExitScreen,(0,0))
+                    pygame.display.update()
+                    GameLives=5
+                    sleep(4)
+                else:
+                    if Sanet>0:
+                        print("Sanetization kills virus")
+                        Sanet-=1
+                        BoomEffect(screen,0,Sanet,RoadX,RoadY+20)
+                        EntityRoad,RoadX,RoadY,HeightVirus,Danger=getRoadEntity()
+                    else:
+                        print("Collision")
+                        BoomEffect(screen,1,Sanet,xInit+10,yTop-20)
+                        EntityRoad,RoadX,RoadY,HeightVirus,Danger=getRoadEntity()
+                        GameLives-=1
+            else:
+                print("Sanetization")
+                Sanet=3
+                DrawFunction(screen,xInit,yTop,CharacterSize,CharacterSize,[0,0,255])
+    if alter==1 and not(Crouch) and not(Jump):            
         yTop=yInit
         screen.blit(CharacterMove[0],(xInit,yTop))
+        if Sanet:
+            DrawFunction(screen,xInit,yTop,CharacterSize,CharacterSize,[0,0,255])
     elif alter==-1 and not(Crouch) and not(Jump):
         yTop=yInit
         screen.blit(CharacterMove[1],(xInit,yTop))
+        if Sanet:
+            DrawFunction(screen,xInit,yTop,CharacterSize,CharacterSize,[0,0,255])
     elif Jump and not(Crouch):
         #print(f"{RoadY+HeightVirus}>={yTop} and {RoadY+HeightVirus}<={yTop+CharacterSize}")
         #DrawFunction(screen,xInit,yTop,CharacterSize,CharacterSize,[0,0,255])
         yTop,jumpLim,Jump=jump(yTop,jumpLim,Jump)
         screen.blit(CharacterMove[2],(xInit,yTop))
+        if Sanet:
+            DrawFunction(screen,xInit,yTop,CharacterSize,CharacterSize,[0,0,255])
     else:
         yTop=yInit+20
         screen.blit(CharacterMove[3],(xInit,yTop))
+        if Sanet:
+            DrawFunction(screen,xInit,yTop,CharacterSize,CharacterSize,[0,0,255])
         Crouch=0
     alter*=-1
     pygame.display.update()
     pygame.time.delay(GameSpeed)
     if pygame.time.get_ticks()>=TimeofGame*1000:
+        xHome=ScreenSize
+        alter=1
+        while xHome>=xInit:
+            xHome,_=Movement(xHome,False,0)
+            sleep(0.1)
+            screen.blit(Environment[0],(0,0))
+            if alter==1:screen.blit(CharacterMove[0],(xInit,yInit))
+            else:screen.blit(CharacterMove[1],(xInit,yInit))
+            screen.blit(HomeSS,(xHome, yInit-20))
+            pygame.display.update()
+            alter*=-1
+        screen.blit(Environment[0],(0,0))
+        screen.blit(HomeSS,(xHome, yInit-20))
+        pygame.display.update()
+        sleep(2)
+        screen.blit(WinnerScreen,(0,0))
+        pygame.display.update()
+        sleep(8)
+        pygame.display.update()
         print("Game over")
         break
     
