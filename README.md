@@ -89,3 +89,35 @@ For the Beginners and Developers who want to learn PyGame, I am planning on conv
 - **For the Kids and Babies to Develop their Minds to Generate Awareness about Cleanness and Sanetization**
 This game could led to a positive awareness among the mind of kids and create a good image of importance of sanitation and hygene in maintaining their health, I am not sure how nicely it will work, but expect it to have some positive impact.
 ![](GithubReferences/FlowC2.jpg)
+
+## GamePlay Images
+![](GithubReferences/GameView1.jpg)
+![](GithubReferences/GameView2.jpg)
+![](FinalScreen.png)
+
+## Installation and Setup
+In order to play this game, You must ensure that you have pygame installed as your python library. In case you don't, just enter this command:
+
+> python3 -m pip install pygame
+
+If your default python is called out by **py** then you may try this command:
+
+> py -m pip install pygame
+
+Or if your default python is called out by **python** then you may try this:
+
+> python -m pip install pygame
+
+Note that if your pip is associated with environment variables then you may directly go with:
+
+> pip install pygame
+
+Once the installation is finish, either you can run it from python IDLE shell or you can manually write this script in your CMD:
+
+> python3 PlayGame.py --diff Medium
+
+For easy or hard mode:
+> python3 PlayGame.py --diff Easy
+> python3 PlayGame.py --diff Hard
+
+**Kindly make sure your first letter of mode-type remains capital as the choices are case sensetive.**
