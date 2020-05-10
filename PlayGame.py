@@ -6,19 +6,57 @@ from random import randint as ri
 import warnings
 warnings.filterwarnings("ignore")
 from time import sleep
-import cv2 #For waitkeys
+#import cv2 #For waitkeys
+import argparse
+parser=argparse.ArgumentParser()
+parser.add_argument("--diff",help="Set Difficulty [Easy | Medium | Hard]",type=str)
+args, leftovers = parser.parse_known_args()
+if args.diff is None or args.diff=="Easy":
+    TimeofGame=60
+    GameSpeed=100
+    SkyEntityVelocity=65 #Velocity of the entities floating in the sky
+    RoadEntityVelocity=25
+elif args.diff=="Medium":
+    TimeofGame=180
+    GameSpeed=80
+    SkyEntityVelocity=65 #Velocity of the entities floating in the sky
+    RoadEntityVelocity=25
+    
+else:
+    TimeofGame=300
+    GameSpeed=50
+    SkyEntityVelocity=65 #Velocity of the entities floating in the sky
+    RoadEntityVelocity=70
+print(TimeofGame,GameSpeed,SkyEntityVelocity,RoadEntityVelocity) 
 #Game variables
-ScreenSize=720
-ScreenWidth=480
-CharacterSize=50
-TimeofGame=60
-yInit=300
-CloudLength=80
-CloudWidth=30
-BirdSquare=50
-BirdRectangleH=60
-BirdRectangleW=40
+#Please note that except for these variables don't change any other variable as it may affect the logic of game
 
+#Variables that are not recommended to change
+ScreenSize=720 #Screen size in terms of X-Co ordinate
+ScreenWidth=480 #Screen size in terms of Y-Co ordinate
+CharacterSize=50 #Size of playing character
+yInit=300  #initial Y-co ordinate of the player
+xInit=50 #Initial X-co ordinate of the player
+
+#Variables that can be changed
+#TimeofGame=60 #Game Completion time in seconds
+ExplosionSize=50 #Explosion on collision (Size of the surface [Explosion icon]
+virussize=60 #Incoming Viruses Size
+CloudLength=80 #Sky cloud Length
+CloudWidth=30 #Sky Cloud width
+BirdSquare=50 #1:1 Aspect ratio birds
+BirdRectangleH=60 # Rectangular aspect ratio Bird Icons
+BirdRectangleW=40 # Rectangular aspect ratio Bird Icons (If you change these make sure you change them in the same aspect ratio
+SkyHeightY=100 #Location at which birds and clouds are flying
+#GameSpeed=100 #Speed of occurences in the game
+#SkyEntityVelocity=65 #Velocity of the entities floating in the sky
+#RoadEntityVelocity=35 #Velocity of the entities moving on the road
+jumpLim=jumpMag=7 #Jumping intensity of the Player
+jumpGrowth=0.5 # Magnification factor of Height achieved per unit of jump
+GameLives=3 #Total lives in Game
+CarSpeed=40
+CarHeightY=400
+CarLength=150
 
 #Game configurations
 screen = pygame.display.set_mode([ScreenSize,ScreenWidth])
@@ -27,15 +65,17 @@ CharacterMove.append(scale(pygame.image.load("charfm1.png"),(CharacterSize,Chara
 CharacterMove.append(scale(pygame.image.load("charfm2.png"),(CharacterSize,CharacterSize))) #Walk-02
 CharacterMove.append(scale(pygame.image.load("CharJump.png"),(CharacterSize,CharacterSize))) #Jump
 
-CharacterMove.append(scale(pygame.image.load("Charduck.png"),(int((CharacterSize-20)/0.724),CharacterSize-20))) #Aspect Ratio Scaling
+CharacterMove.append(scale(pygame.image.load("Charduck.png"),(int((CharacterSize-20)/0.724),CharacterSize-20))) #Aspect Ratio Scaling Dodge
 
 
 #Game Environment
 Environment=[]
-Environment.append(scale(pygame.image.load("cityBg0.png"),(ScreenSize,ScreenWidth)))
+Environment.append(scale(pygame.image.load("cityBg.png"),(ScreenSize,ScreenWidth)))
 Environment.append(scale(pygame.image.load("cityBg1.png"),(ScreenSize,ScreenWidth)))
 Environment.append(scale(pygame.image.load("cityBg2.png"),(ScreenSize,ScreenWidth)))
 Environment.append(scale(pygame.image.load("cityBg3.png"),(ScreenSize,ScreenWidth)))
+#Environment.append(scale(pygame.image.load("cityBg02.png"),(ScreenSize,ScreenWidth)))
+#Environment.append(scale(pygame.image.load("cityBg03.png"),(ScreenSize,ScreenWidth)))
 #Sky Variables
 
 Skies=[]
@@ -48,7 +88,6 @@ Skies.append(scale(pygame.image.load("bird3.png"),(BirdSquare,BirdSquare)))
 #Road Variables
 
 Roads=[]
-virussize=60
 virusTYPE=0
 Roads.append([scale(pygame.image.load("cv1.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
 Roads.append([scale(pygame.image.load("cv2.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
@@ -62,6 +101,14 @@ Roads.append([scale(pygame.image.load("cv9.png"),(virussize,virussize)),virussiz
 Roads.append([scale(pygame.image.load("cv10.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
 Roads.append([scale(pygame.image.load("cv11.png"),(virussize,virussize)),virussize,virussize,virusTYPE])
 Roads.append([scale(pygame.image.load("cv12.png"),(virussize,virussize)),virussize,virussize,virusTYPE]) #upto index=11
+
+#Cars
+Cars=[]
+Cars.append(scale(pygame.image.load("car1.png"),(CarLength,int(CarLength/3))))
+Cars.append(scale(pygame.image.load("car2.png"),(CarLength,int(CarLength/3))))
+Cars.append(scale(pygame.image.load("car3.png"),(CarLength,int(CarLength/3))))
+Cars.append(scale(pygame.image.load("car4.png"),(CarLength,int(CarLength/3))))
+Cars.append(scale(pygame.image.load("car5.png"),(CarLength,int(CarLength/3))))
 
 #Protection Variables
 
@@ -82,7 +129,6 @@ WinnerScreen=scale(pygame.image.load("WinnerScreen.png"),(ScreenSize,ScreenWidth
 #Explosions
 
 Booom=[]
-ExplosionSize=50
 Booom.append(scale(pygame.image.load("explosion.png"),(ExplosionSize,ExplosionSize)))
 Booom.append(scale(pygame.image.load("whiteSmoke.png"),(ExplosionSize,ExplosionSize)))
 #Game Dynamics
@@ -92,19 +138,12 @@ def reinitialize():
 #Dynamics Variables
 IsSkyClear=True
 IsRoadClear=True
+IsCarClear=True
 IsSanetizerOn=False
 Crouch=False
 Jump=False
-SkyEntityVelocity=45
-RoadEntityVelocity=55
 SkyX=reinitialize()
-SkyHeightY=100
-GameSpeed=100
 FlyingVT=20
-xInit=50 #Character X position
-jumpLim=jumpMag=7 #Jumping intensity
-jumpGrowth=0.5
-GameLives=3
 #Dynamics Functions
 def Movement(xn,IsScreenClear,Type):
     IsScreenClear=False
@@ -120,6 +159,18 @@ def getSkyEntity():
     SkyIndex=ri(0,len(Skies)-1)
     EntitySky=Skies[SkyIndex]
     return(EntitySky,reinitialize(),SkyHeightY)
+def CarMovement(xN,IsScreenClear):
+    IsScreenClear=False
+    if xN>=ScreenSize:
+        IsScreenClear=True
+        xN=0
+    else:
+        xN+=CarSpeed
+    return(xN,IsScreenClear)
+def getCarEntity():
+    SkyIndex=ri(0,len(Cars)-1)
+    EntitySky=Cars[SkyIndex]
+    return(EntitySky,0,CarHeightY)
 def getRoadEntity():
     Type=0
     if ri(0,15)==0: #Making this event less likely
@@ -151,12 +202,12 @@ def BoomEffect(screen,ind,Sanet,x,y):
     if ind:
         screen.blit(Booom[0],(x,y))
     else:
-        print("S Kills")
-        print(x,y)
+        #print("S Kills")
+        #print(x,y)
         screen.blit(Booom[1],(x,y))
         screen.blit(CharacterMove[1],(xInit,yInit))
     pygame.display.update()
-    pygame.time.delay(4000)
+    pygame.time.delay(1000)
 
         
 #Game-Play
@@ -165,11 +216,19 @@ run=1
 Danger=1
 yTop=yInit
 Sanet=0
-
+roadRun=0
 while run:
+    print("T")
     if Sanet<0:
         Sanet=0
     screen.blit(Environment[Sanet],(0,0)) #Creating Environment
+    if IsCarClear:
+        EntityCar,CarX,CarY=getCarEntity()
+        IsCarClear=False
+    else:
+        CarX,IsCarClear=CarMovement(CarX,IsCarClear)
+        screen.blit(EntityCar,(CarX,CarY))
+        print("Else happens")
     if IsSkyClear:
         #Get the Sky Entity EntitySky,SkyX,SkyY=getSkyEntity()
         EntitySky,SkyX,SkyY=getSkyEntity()
@@ -204,7 +263,7 @@ while run:
                     print("Game Over!")
                     screen.blit(ExitScreen,(0,0))
                     pygame.display.update()
-                    GameLives=5
+                    GameLives=3
                     sleep(4)
                 else:
                     if Sanet>0:
