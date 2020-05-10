@@ -3,9 +3,42 @@ This repository is a submission for "Raccoons Virtual Hackathon". [Hackathon Lin
               
 A very simple 2D game where the character jumps and dodges the viruses, infected people and bats. Further the game ends once you reach your home. Difficulty of the game can be changed by changing the virusvelocity variable.
 
+## Installation and Setup
+In order to play this game, You must ensure that you have pygame installed as your python library. In case you don't, just enter this command:
+
+> python3 -m pip install pygame
+
+If your default python is called out by **py** then you may try this command:
+
+> py -m pip install pygame
+
+Or if your default python is called out by **python** then you may try this:
+
+> python -m pip install pygame
+
+Note that if your pip is associated with environment variables then you may directly go with:
+
+> pip install pygame
+
+Once the installation is finish, either you can run it from python IDLE shell or you can manually write this script in your CMD:
+
+> python3 PlayGame.py --diff Medium
+
+For easy or hard mode:
+> python3 PlayGame.py --diff Easy
+> python3 PlayGame.py --diff Hard
+
+**Kindly make sure your first letter of mode-type remains capital as the choices are case sensetive.**
+
+
+
 # Covid Raccoon: Saves the Day
 
 ![](WinnerScreen.png)
+## Project Components
+1. PyGame (Covid Raccoon:- Saves the City)
+2. JS Implication (An attempt to host the game on web [Partial Success 😛])
+3. [HTML Webpage](https://sedhha.github.io/covidRaccoon/)
 
 ## Why Video Game Track?
 
@@ -29,7 +62,7 @@ Though I am well versed with other Development (App-Dev/ Web-Dev/ Designing) and
 
 Vs  What I did in JS using p5.js 🤣🤣🤣
 
-![](JSD.gif)
+![](JavaScriptDemo.gif)
 
 - It allows you to Roam around the city, which is apparently static (unless you add your custom background :-P) and look for the virus-infected people or viruses escape them till you reach your home, which is at the end of your city.
 - In this adventure, you will see different types of viruses that will try to infect you! You're a raccoon, and you're on a mission to sanitize the city without getting infected. 
@@ -105,29 +138,16 @@ This game could led to a positive awareness among the mind of kids and create a 
 ![](GithubReferences/GameView2.jpg)
 ![](FinalScreen.png)
 
-## Installation and Setup
-In order to play this game, You must ensure that you have pygame installed as your python library. In case you don't, just enter this command:
+## References
+- [PyGame Tutorials](https://www.youtube.com/watch?v=i6xMBig-pP4&list=PLzMcBGfZo4-lp3jAExUCewBfMx3UZFkh5)
+- [W3Schools](https://www.w3schools.com/howto/default.asp)
+- [p5.js Documentation](https://p5js.org/get-started/)
 
-> python3 -m pip install pygame
+## Credits
+Thanks to 
+- Georgijs / Raccoons/ Mentor (Helped me with feedback and mentoring throughout the Hack)
+- Pauls / Mentor / Web development(opens in new tab)  (A big thanks, without him my JS game wouldn't even have started and the page would have looked like this: 😅):
+![](GithubReferences/bugs.jpg)
+- Lina / Raccoons(opens in new tab) (A big thanks to her as well for guiding with submissions and other stuff throughout the Hackathon, her workshop of Creative Computing helped me get started with JS, thanks so much for such a wonderful workshop! If the workshop wouldn't have happened then probably I wouldn't have dared to replicate this game in JS 😥)
 
-If your default python is called out by **py** then you may try this command:
-
-> py -m pip install pygame
-
-Or if your default python is called out by **python** then you may try this:
-
-> python -m pip install pygame
-
-Note that if your pip is associated with environment variables then you may directly go with:
-
-> pip install pygame
-
-Once the installation is finish, either you can run it from python IDLE shell or you can manually write this script in your CMD:
-
-> python3 PlayGame.py --diff Medium
-
-For easy or hard mode:
-> python3 PlayGame.py --diff Easy
-> python3 PlayGame.py --diff Hard
-
-**Kindly make sure your first letter of mode-type remains capital as the choices are case sensetive.**
+and ofcourse all other organizers, mentors and EchoAR, I am sorry but I am still not able to figure out how to generate the Key! 😕 Or else I would have tried implementing that too!
