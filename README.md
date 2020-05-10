@@ -1,5 +1,8 @@
 # covidRaccoon
 This repository is a submission for "Raccoons Virtual Hackathon". [Hackathon Link](https://raccoons-virtual-hackathon.devpost.com/updates/12926-the-day-has-come-launching-the-raccoons)
+**Youtube Video 1:** [Explains all about Pygame and the origin of the project](https://www.youtube.com/watch?v=VAwXsErtI8A)
+**Youtube Video 2:** [Explains all about the attempt to implement the Game on Webserver Using JS](https://www.youtube.com/watch?v=Ri9W8guFrXI)
+Would request you to watch them both to go through the entire project! Thanks... Do let me know if you have any feedbacks or questions for the same.
               
 A very simple 2D game where the character jumps and dodges the viruses, infected people and bats. Further the game ends once you reach your home. Difficulty of the game can be changed by changing the virusvelocity variable.
 
