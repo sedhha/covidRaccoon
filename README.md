@@ -10,9 +10,11 @@ Would request you to watch them both to go through the entire project! Thanks...
 A very simple 2D game where the character jumps and dodges the viruses, infected people and bats. Further the game ends once you reach your home. Difficulty of the game can be changed by changing the virusvelocity variable.
 
 ## Installation and Setup
+
 ### Playing Instructions
 
 >**For HTML Webpage Game: Press Up arrow to Jump and down Arrow to duck**
+
 > **For PyGame: Press SpaceBar to Jump and Up arrow to duck** (I know that's wierd, but never changed it from the very beginning due to different combinations of testing 😅😅😅)
 
 In order to play this game, You must ensure that you have pygame installed as your python library. In case you don't, just enter this command:
