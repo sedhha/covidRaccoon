@@ -1,0 +1,38 @@
+body
+{
+  background-color: #ececec;
+  /*background-image: url("backgroundTry.jpg");*/
+}
+h1
+{
+  text-align: center;;
+  margin-bottom: 0;
+  color: #162447;
+}
+p
+{
+  text-align: center;
+  padding: 0 15%;
+  margin: 0;
+  color: #162447;
+  font-style: oblique;
+}
+.ImageClass
+{
+  display: block;
+  margin-top: 10px;
+  padding-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  height: 35%;
+  width: 20%;
+  border-radius: 10%;
+}
+.p5Canvas
+{
+  display: block;
+  margin-top: 10px;
+  padding-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
