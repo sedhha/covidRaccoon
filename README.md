@@ -38,7 +38,7 @@ For easy or hard mode:
 ## Project Components
 1. PyGame (Covid Raccoon:- Saves the City)
 2. JS Implication (An attempt to host the game on web [Partial Success 😛])
-3. [HTML Webpage](https://sedhha.github.io/covidRaccoon/)
+3. [HTML Webpage](https://sedhha.github.io/covidRaccoon/) (Note that this isn't the actual game, it's just an attempt to build it on JS and host on web)
 
 ## Why Video Game Track?
 
