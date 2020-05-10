@@ -3,7 +3,8 @@ var CharSize=30;var yVirus=300;var yChar=yVirus;var yM=7;
 var yJ=yM;var VirusVelocity=10;var isScreenClear=true;
 var xMove=XScreenSize;var jumpMag=8;var jumpLims=jumpMag;
 var yInit=yChar-20;var yCC=yInit;var flag=0;var jumpGrowth=0.35;
-var vVal=[0,10,20,30,40,50];var newV=0;
+var vVal=[0,10,20,30,40,50];var newV=0;var yToP=yCC-10;
+var yBottoM=yCC+CharSize+20;var yValV=yVirus;
 
 function setup() {
   createCanvas(720, 480);
@@ -40,12 +41,12 @@ function jump()
    // return(y,jumpLims,flag);
 }
 
-
 function draw() {
-  print(vVal[floor(random()*5)]);
+  //print(vVal[floor(random()*5)]);
   background(0,200,255);
   fill(255,255,255);
-  rect(xMove, yVirus-newV, 30, 30,30);
+  yValV=yVirus-newV;
+  rect(xMove, yValV, 30, 30,30);
   fill(0,255,0);
   rect(0,yVirus+30,XScreenSize,yScreenSize);
   if (keyCode === UP_ARROW) {
@@ -69,17 +70,33 @@ function draw() {
     //print(yCC);
     fill(230,160,200);
     rect(xCharacter,yCC-30,CharSize,CharSize+30);
+    yToP=yCC-30;
+    yBottoM=yCC+CharSize;
+
   }
   else if(flag===2)
   {
     fill(230,160,200);
     rect(xCharacter,yCC+30,CharSize,CharSize-10);
+    yToP=yCC+30;
+    yBottoM=yCC+CharSize+20;
   }
   else
   {
     fill(230,160,200);
     rect(xCharacter,yCC-10,CharSize,CharSize+30);
+    yToP=yCC-10;
+    yBottoM=yCC+CharSize+20;
   }
+  if(xMove>xCharacter && xMove<xCharacter+CharSize)
+    if((yToP>=yValV && yToP<=yValV+30) || (yBottoM>=yValV && yBottoM<=yValV+30) || (yValV>=yToP && yValV<=yBottoM))
+    {
+      var selection=prompt("Collision, To continue press Y else press N");xMove=XScreenSize;
+      if(selection!=="Y")
+        noLoop();
+
+    }
+
 
   xMove=movement(xMove);
 }
