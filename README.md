@@ -27,6 +27,10 @@ Though I am well versed with other Development (App-Dev/ Web-Dev/ Designing) and
 ## What it does ?
 ![](GithubReferences/Game.gif)
 
+Vs  What I did in JS using p5.js
+
+![]()
+
 - It allows you to Roam around the city, which is apparently static (unless you add your custom background :-P) and look for the virus-infected people or viruses escape them till you reach your home, which is at the end of your city.
 - In this adventure, you will see different types of viruses that will try to infect you! You're a raccoon, and you're on a mission to sanitize the city without getting infected. 
 - To escape from the viruses, you have to ensure that you don't come in contact with them at any cost! Also, you need to keep a distance from those who are already infected.
