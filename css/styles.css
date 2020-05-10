@@ -1,6 +1,6 @@
 body
 {
-  background-color: #ececec;
+  background-color: #97e5ef;
   /*background-image: url("backgroundTry.jpg");*/
 }
 h1
@@ -17,15 +17,15 @@ p
   color: #162447;
   font-style: oblique;
 }
-.ImageClass
+.ImageP
 {
   display: block;
   margin-top: 10px;
   padding-top: 0;
   margin-left: auto;
   margin-right: auto;
-  height: 35%;
-  width: 20%;
+  height: 250px;
+  width: 300px;
   border-radius: 10%;
 }
 .p5Canvas
